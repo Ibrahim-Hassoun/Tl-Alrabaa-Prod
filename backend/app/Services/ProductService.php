@@ -34,7 +34,7 @@ class ProductService
         $product = Product::create($data);
 
         if (!$product) {
-            throw new Exception('Product creation failed.');
+            throw new Exception('Product creation failed.', 400);
         }
 
         return $product;

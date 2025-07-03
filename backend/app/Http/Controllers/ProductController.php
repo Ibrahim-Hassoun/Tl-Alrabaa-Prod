@@ -50,7 +50,11 @@ class ProductController extends Controller
             $product = $this->productService->create($request->validated());
             return $this->success($product, 201);
         } catch (\Exception $e) {
-             return $this->error($e->getMessage(), $e->getCode()?:400);
+            $status = $e->getCode();
+            if (!is_numeric($status) || $status < 100 || $status > 599) {
+                $status = 401; // fallback to a valid HTTP code
+            }
+            return $this->error($e->getMessage(), $status);
         }
     }
 
