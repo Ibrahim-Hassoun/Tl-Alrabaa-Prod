@@ -1,0 +1,79 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Product;
+use App\Services\ProductService;
+use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
+
+class ProductController extends Controller
+{
+    use ApiResponse;
+
+    protected $productService;
+
+    public function __construct(ProductService $productService)
+    {
+        $this->productService = $productService;
+    }
+
+    // GET /api/products
+    public function index(Request $request)
+    {
+        try {
+            $perPage = $request->query('per_page', 10);
+            $products = $this->productService->getPaginated($perPage);
+            return $this->success($products);
+        } catch (\Exception $e) {
+             return $this->error($e->getMessage(), $e->getCode()?:500);
+        }
+    }
+
+    // GET /api/products/{id}
+    public function show($id)
+{
+    try {
+        $product = $this->productService->getById($id);
+        return $this->success($product);
+    } catch (\Exception $e) {
+         return $this->error($e->getMessage(), $e->getCode()?:400);
+    }
+}
+
+    // POST /api/products
+    public function store(StoreProductRequest $request)
+    {
+        try {
+            $product = $this->productService->create($request->validated());
+            return $this->success($product, 201);
+        } catch (\Exception $e) {
+             return $this->error($e->getMessage(), $e->getCode()?:400);
+        }
+    }
+
+    // PUT /api/products/{product}
+    public function update(UpdateProductRequest $request, Product $product)
+    {
+        try {
+            $updated = $this->productService->update($product, $request->validated());
+            return $this->success($updated);
+        } catch (\Exception $e) {
+             return $this->error($e->getMessage(), $e->getCode()?:400);
+        }
+    }
+
+    // DELETE /api/products/{product}
+    public function delete($id)
+    {
+        try {
+            $this->productService->delete($id);
+            return $this->success(null);
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode()?:400);
+        }
+    }
+
+}
