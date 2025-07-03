@@ -22,13 +22,15 @@ class BaseFormRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
      protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'status' => false,
-            'message' => 'Validation failed',
-            'data' => $validator->errors()
-        ], 422));
-    }
+{
+    throw new HttpResponseException(response()->json([
+        'success' => false,
+        'message' => 'Validation failed',
+        'data' => $validator->errors()
+    ], 422));
+}
+
+ 
     public function rules(): array
     {
         return [
