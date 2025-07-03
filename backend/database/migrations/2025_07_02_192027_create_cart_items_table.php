@@ -11,15 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cart_items', function (Blueprint $table) {
+           Schema::create('cart_items', function (Blueprint $table) {
             $table->id();
 
+            // Foreign keys
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
 
+            // Quantity
             $table->integer('quantity')->default(1);
 
+            // Timestamps + SoftDeletes
             $table->timestamps();
+            $table->softDeletes();
+
+            // Constraints
+            $table->unique(['user_id', 'product_id']); // one product per user
+            $table->index('quantity');
         });
     }
 

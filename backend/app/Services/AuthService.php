@@ -17,7 +17,7 @@ class AuthService
             'email'      => $data['email'],
             'password'   => $data['password'],
             'phone'      => $data['phone'] ?? null,
-            'role'       => $data['role'] ?? 'user',
+            'role'       => 'user',
         ]);
         if(!$user){
             throw new \Exception('User registration failed');

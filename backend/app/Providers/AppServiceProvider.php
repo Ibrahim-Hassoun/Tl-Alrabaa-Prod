@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\ProductService;
+use App\Services\CartService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,6 +15,9 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(ProductService::class, function ($app) {
         return new ProductService();
+     });
+        $this->app->singleton(ProductService::class, function ($app) {
+        return new CartService();
      });
     }
 
