@@ -15,9 +15,12 @@ Route::middleware('auth:api')->group(function () {
 });
 
 Route::prefix('products')->controller(ProductController::class)->group(function () {
-    Route::get('/', 'index');                  // List all products
-    Route::post('/', 'store');                // Create a new product
-    Route::get('/{id}', 'show');         // Get a single product by ID
-    Route::put('/{product}', 'update');       // Update a product by ID
-    Route::delete('/{id}', [ProductController::class, 'delete']);   // Delete a product by ID
+    Route::get('/', 'index');                   // List all products
+    Route::get('/{id}', 'show');                // Get a single product by ID
+    Route::middleware(['auth:api', 'role:admin'])->group(function () {
+        Route::post('/', 'store');                // Create a new product
+        Route::put('/{product}', 'update');       // Update a product by ID
+        Route::delete('/{id}', [ProductController::class, 'delete']);   // Delete a product by ID
+    });
+   
 });
