@@ -11,9 +11,17 @@ use Illuminate\Support\Str;
 
 class ProductService
 {
-    public function getPaginated($perPage = 10)
+    public function getPaginated($perPage = 10, $filters = [])
     {
-        $products = Product::with('category')->paginate($perPage);
+        $query = Product::with('category');
+
+        if (!empty($filters['category'])) {
+            $query->whereHas('category', function ($q) use ($filters) {
+                $q->where('name', $filters['category']);
+            });
+        }
+
+        $products = $query->paginate($perPage);
 
         if ($products->isEmpty()) {
             throw new Exception('No products found.');
@@ -21,6 +29,7 @@ class ProductService
 
         return $products;
     }
+
 
     public function create(array $data)
     {

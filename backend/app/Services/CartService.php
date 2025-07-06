@@ -51,16 +51,20 @@ class CartService
         if (!$item) {
             throw new \Exception("Item not found in cart", 404);
         }
-
+        $item->quantity = 0;
         $item->delete();
         return true;
     }
 
     public function clear($user)
     {
+        // Set quantity to 0 for all cart items of the user
+        CartItem::where('user_id', $user->id)->update(['quantity' => 0]);
+
+        // Then delete the records
         CartItem::where('user_id', $user->id)->delete();
     }
-
+    
     public function decrease($user, $productId)
     {
         $item = CartItem::where('user_id', $user->id)
