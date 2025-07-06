@@ -1,5 +1,5 @@
 // components/ProductSection/ProductCard.jsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 
@@ -18,6 +18,10 @@ const ProductCard = ({
   onDelete,
   collectionName,
 }) => {
+  useEffect(()=>{
+    console.log('image url is ',image.slice("AWS_URL=".length))
+  }
+)
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -27,7 +31,7 @@ const ProductCard = ({
     >
       <img
         className="w-full h-52 object-cover"
-        src={`/images/${image}`}
+        src={image.slice("AWS_URL=".length)}
         alt={name}
         loading="lazy"
       />

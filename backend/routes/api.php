@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ImageController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -25,6 +26,9 @@ Route::prefix('products')->controller(ProductController::class)->group(function 
     });
    
 });
+
+Route::post('/upload-image', [ImageController::class, 'upload']);
+
 
 
 Route::prefix('cart')->middleware('auth:api')->group(function () {

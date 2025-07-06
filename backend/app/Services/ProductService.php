@@ -1,13 +1,11 @@
 <?php
 
-// app/Services/ProductService.php
-
 namespace App\Services;
 
 use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
-use Exception;
 use Illuminate\Support\Str;
+use Exception;
 
 class ProductService
 {
@@ -30,16 +28,21 @@ class ProductService
         return $products;
     }
 
-
     public function create(array $data)
     {
         if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
-            $data['image'] = $data['image']->store('products', 'public');
+            // Upload to S3
+            $path = $data['image']->store('products', 's3');
+            Storage::disk('s3')->setVisibility($path, 'public');
+            $data['image'] = Storage::disk('s3')->url($path);
         }
+
         $data['slug'] = Str::slug($data['name']);
-        if(!isset($data['stock_quantity'])) {
-            $data['stock_quantity'] = 0; // Default stock quantity if not provided
+
+        if (!isset($data['stock_quantity'])) {
+            $data['stock_quantity'] = 0;
         }
+
         $product = Product::create($data);
 
         if (!$product) {
@@ -52,11 +55,17 @@ class ProductService
     public function update(Product $product, array $data)
     {
         if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
-            if ($product->image) {
-                Storage::disk('public')->delete($product->image);
+            // Delete old image from S3 if it exists and is hosted on S3
+            if ($product->image && str_contains($product->image, 's3.amazonaws.com')) {
+                $s3Path = parse_url($product->image, PHP_URL_PATH);
+                $s3Path = ltrim($s3Path, '/');
+                Storage::disk('s3')->delete($s3Path);
             }
 
-            $data['image'] = $data['image']->store('products', 'public');
+            // Upload new image to S3
+            $path = $data['image']->store('products', 's3');
+            Storage::disk('s3')->setVisibility($path, 'public');
+            $data['image'] = Storage::disk('s3')->url($path);
         }
 
         $updated = $product->update($data);
@@ -69,24 +78,26 @@ class ProductService
     }
 
     public function delete($id)
-{
-    $product = Product::find($id);
+    {
+        $product = Product::find($id);
 
-    if (!$product) {
-        throw new Exception("Product not found",400);
+        if (!$product) {
+            throw new Exception("Product not found", 400);
+        }
+
+        // Do NOT delete image from S3 since the product is just soft-deleted
+        $product->delete();
     }
 
-    $product->delete();
-}
 
     public function getById($id)
-{
-    $product = Product::with('category')->find($id);
+    {
+        $product = Product::with('category')->find($id);
 
-    if (!$product) {
-        throw new \Exception('Product not found');
+        if (!$product) {
+            throw new Exception('Product not found');
+        }
+
+        return $product;
     }
-
-    return $product;
-}
 }

@@ -34,7 +34,7 @@ class ProductController extends Controller
 
             return $this->success($products);
         } catch (\Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+            return $this->error($e->getMessage(),  500);
         }
     }
 
