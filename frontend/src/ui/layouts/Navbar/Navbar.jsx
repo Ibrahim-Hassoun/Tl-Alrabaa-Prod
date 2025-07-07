@@ -9,6 +9,7 @@ import BurgerMenu from "./../../components//BurgerMenu/BurgerMenu";
 
 const Navbar = () => {
   const dispatch = useDispatch();
+  console.log("loggedIn:", useSelector((state) => state.auth.loggedIn));
   const loggedIn = useSelector((state) => state.auth.loggedIn);
 
   const [activeSection, setActiveSection] = useState("home");
@@ -68,9 +69,12 @@ const Navbar = () => {
                 toggleVisible={() => setUserOptionsVisible(!userOptionsVisible)}
               />
             ) : (
-              <li className="cursor-pointer bg-secondary rounded-xl p-1" onClick={() => dispatch(setShowPopup(true))}>
-                Log in
-              </li>
+              <Link to='/register' className="cursor-pointer  rounded-xl p-1" onClick={() => dispatch(setShowPopup(true))}>
+              
+                  Login
+                
+                
+              </Link>
             )}
           </ul>
         </div>
