@@ -4,8 +4,8 @@ const TobaccoFilters = ({ filters, setFilters }) => {
   const [dropDownFlavor, setDropDownFlavor] = useState(true);
   const [dropDownSize, setDropDownSize] = useState(true);
 
-  const selectedFlavor = filters.flavor || "";
-  const selectedSize = filters.size || "";
+  const selectedFlavor = filters.flavor || '';
+  const selectedWeight = filters.weight || '';
 
   return (
     <div className="queries mt-3 flex flex-col mx-auto w-fit md:w-full h-fit bg-primary text-tertiary text-start">
@@ -18,9 +18,7 @@ const TobaccoFilters = ({ filters, setFilters }) => {
             ▼
           </span>
         </span>
-        <ul
-          className={`ml-5 w-3/5 border-l border-l-gray-100 transition-max-height duration-300 ease-in-out overflow-hidden ${dropDownFlavor ? 'max-h-40' : 'max-h-0'}`}
-        >
+        <ul className={`ml-5 w-3/5 border-l border-l-gray-100 transition-max-height duration-300 ease-in-out overflow-hidden ${dropDownFlavor ? 'max-h-40' : 'max-h-0'}`}>
           {['', 'cool', 'fruity', 'sour', 'sweet'].map((flavor) => (
             <li
               key={flavor || 'all'}
@@ -40,18 +38,14 @@ const TobaccoFilters = ({ filters, setFilters }) => {
             ▼
           </span>
         </span>
-        <ul
-          className={`ml-5 w-3/5 border-l border-l-gray-100 transition-max-height duration-300 ease-in-out overflow-hidden ${dropDownSize ? 'max-h-40' : 'max-h-0'}`}
-        >
-          {['', 'small', 'medium', 'large'].map((size) => (
+        <ul className={`ml-5 w-3/5 border-l border-l-gray-100 transition-max-height duration-300 ease-in-out overflow-hidden ${dropDownSize ? 'max-h-40' : 'max-h-0'}`}>
+          {['', '50g', '250g', '1000g'].map((weight) => (
             <li
-              key={size || 'all'}
-              className={`pl-2 cursor-pointer ${selectedSize === size ? 'text-secondary' : ''}`}
-              onClick={() => setFilters((prev) => ({ ...prev, size }))}
+              key={weight || 'all'}
+              className={`pl-2 cursor-pointer ${selectedWeight === weight ? 'text-secondary' : ''}`}
+              onClick={() => setFilters((prev) => ({ ...prev, weight }))}
             >
-              {size
-                ? `${size.charAt(0).toUpperCase() + size.slice(1)} (${size === 'small' ? '50g' : size === 'medium' ? '250g' : '1000g'})`
-                : 'All Sizes'}
+              {weight ? weight : 'All Sizes'}
             </li>
           ))}
         </ul>

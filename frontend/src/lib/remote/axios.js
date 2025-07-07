@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-const apiUrl = 'http://127.0.0.1:8000/api' ;
+const apiUrl = import.meta.env.VITE_URL ;
 
 const request = async ({ method, route, body, headers = {} }) => {
   try {
@@ -10,6 +10,7 @@ const request = async ({ method, route, body, headers = {} }) => {
 
     const defaultHeaders = {
       "Content-Type": "application/json",
+          "Accept": "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
 
       ...headers,

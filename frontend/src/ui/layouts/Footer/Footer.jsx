@@ -9,7 +9,7 @@ const Footer = () => {
   const [dropDownLocation,setDropDownLocation]=useState(false)
   
   return (
-    <div className='footer mt-3 bg-primary min-h-52'>
+    <div className='footer mt-3 pb-3 bg-primary min-h-52'>
         <div className='containers pt-5 m-auto w-full flex flex-wrap justify-between text-start text-tertiary'>
             <div className="left w-full text-center md:w-3/5 md:text-start">
                 <h1 className='font-extrabold text-4xl text-secondary'>Tl-Alrabaa</h1>

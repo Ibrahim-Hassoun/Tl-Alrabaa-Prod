@@ -9,7 +9,7 @@ import BurgerMenu from "./../../components//BurgerMenu/BurgerMenu";
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  console.log("loggedIn:", useSelector((state) => state.auth.loggedIn));
+ 
   const loggedIn = useSelector((state) => state.auth.loggedIn);
 
   const [activeSection, setActiveSection] = useState("home");

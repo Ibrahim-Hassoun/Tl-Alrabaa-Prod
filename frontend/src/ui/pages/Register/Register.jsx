@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import {setUser} from '../../../core/redux/AuthSlice/AuthSlice'
 import request from "../../../lib/remote/axios";
 import { useNavigate } from "react-router-dom";
+import { loadUserCart } from "../../../lib/helpers/loadUserCart";
 
 const Register = () => {
   const nav = useNavigate()
@@ -22,14 +23,22 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form Data:", formData);
+    
     const endpoint = isLogin ? "/login" : "/register";
     try {
-      const response = await request({method:"POST",route:endpoint,body: formData});
+      const payload = isLogin
+        ? { email: formData.email, password: formData.password }
+        : formData;
+
+      const response = await request({ method: "POST", route: endpoint, body: payload });
+
       if (response.success){
-        console.log("Response.data:", response.data);
+        
         dispatch(setUser(response.data));
+        await loadUserCart(dispatch);
         nav("/");
+        
+
       }
       
     } catch (error) {

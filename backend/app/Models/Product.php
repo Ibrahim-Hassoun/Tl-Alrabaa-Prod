@@ -12,7 +12,10 @@ class Product extends Model
     use SoftDeletes,HasFactory;
 
     protected $fillable = [
-        'name', 'slug', 'description', 'price', 'stock_quantity', 'category_id', 'image',
+        'name', 'slug', 'description', 'price', 'stock_quantity', 'category_id', 'image', 'attributes'
+    ];
+    protected $casts = [
+    'attributes' => 'array',
     ];
 
     public function category()

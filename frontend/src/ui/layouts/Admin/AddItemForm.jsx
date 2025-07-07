@@ -18,6 +18,9 @@ const AddItemForm = () => {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [attributes, setAttributes] = useState({
+    "category":"tobacco"
+  });
 
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
@@ -44,6 +47,14 @@ const AddItemForm = () => {
     dispatch(setProductData({ ...productData, [e.target.name]: e.target.value }));
   };
 
+  const handleAttributeChange = (e) => {
+  setAttributes((prev) => ({
+    ...prev,
+    [e.target.name]: e.target.value,
+  }));
+};
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -53,20 +64,19 @@ const AddItemForm = () => {
       formData.append(key, value);
     });
 
+    formData.append('attributes', JSON.stringify(attributes));
     formData.append('image', imageFile);
     formData.append('category', category);
     formData.append('category_id', 1);
 
-    for (const pair of formData.entries()) {
-  console.log(pair[0], pair[1]);
-}
+   
     const res = await request({
       method: 'POST',
       route: `/products`,
       body: formData,
       headers: { 'Content-Type': 'multipart/form-data' },
     });
-    console.log(res)
+    
     setLoading(false);
     setMessage(res.message);
 
@@ -111,14 +121,14 @@ const AddItemForm = () => {
       {/* Category-specific inputs */}
       {category === 'tobacco' && (
         <>
-          <select name="flavor" onChange={handleChange} required className="border border-primary rounded px-2 h-8">
+          <select name="flavor" onChange={handleAttributeChange} required className="border border-primary rounded px-2 h-8">
             <option hidden>Flavor</option>
             <option value="cool">Cool</option>
             <option value="fruity">Fruity</option>
             <option value="sour">Sour</option>
             <option value="sweet">Sweet</option>
           </select>
-          <select name="size" onChange={handleChange} required className="border border-primary rounded px-2 h-8">
+          <select name="size" onChange={handleAttributeChange} required className="border border-primary rounded px-2 h-8">
             <option hidden>Size</option>
             <option value="small">Small</option>
             <option value="medium">Medium</option>

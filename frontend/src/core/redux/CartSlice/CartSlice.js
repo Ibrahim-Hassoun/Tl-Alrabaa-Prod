@@ -15,7 +15,7 @@ const cartSlice = createSlice({
       state.loadedFromDB = true;
     },
     addToCart: (state, action) => {
-      console.log('Adding to cart:', action.payload);
+      
       const { productId, quantity } = action.payload;
       const existing = state.items.find((item) => item.productId === productId);
 
@@ -60,7 +60,11 @@ const cartSlice = createSlice({
     if (!exists) {
       state.products.push(product)
     }
-}
+    },
+    setCart: (state, action) => {
+      state.items = action.payload; // payload is an array of cart items
+    }
+
 
   },
 });
@@ -72,7 +76,8 @@ export const {
   clearCart,
   cacheProductDetails,
   decrementItemQuantity,
-  addProduct 
+  addProduct ,
+  setCart
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

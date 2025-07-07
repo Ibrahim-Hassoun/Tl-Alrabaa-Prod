@@ -20,11 +20,11 @@ const Cart = () => {
   const cartProducts = useSelector((state) => state.cart.products)
 
   useEffect(() => {
-    console.log("before missingIds")
+    
     const missingIds = cartItems
       .map(item => item.productId)
       .filter(id => !cartProducts.find(p => p.id === id))
-    console.log("missingIds", missingIds)
+    
     missingIds.forEach(async (id) => {
       const res = await request({
         method: "GET",
@@ -50,8 +50,7 @@ const Cart = () => {
     items.forEach((cartItem) => {
       const product = products.find(p => p.id === cartItem.productId);
 ;
-      console.log('cartItem', cartItem)
-      console.log('product', product)
+     
       if (product) {
         subtotal += product.price * cartItem.quantity;
       }
@@ -126,7 +125,7 @@ const Cart = () => {
                     (p) => p.id === cartItem.productId
               
                   );
-                  if (!product) {console.log('returning null');return null};
+                  if (!product) {return null};
 
                   return (
                     <motion.div

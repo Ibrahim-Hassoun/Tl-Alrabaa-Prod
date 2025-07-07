@@ -21,9 +21,7 @@ const ProductCard = ({
   const cartItem = cartItems.find((ci) => ci.productId === id);
   const cartCount = cartItem ? cartItem.quantity : 0;
 
-  useEffect(() => {
-    console.log('image url is', image.slice('AWS_URL='.length));
-  }, [image]);
+  
 
   return (
     <motion.div

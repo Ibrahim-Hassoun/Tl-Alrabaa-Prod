@@ -28,6 +28,8 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
 
             $table->boolean('is_active')->default(true);
+            $table->json('attributes')->nullable();
+
             $table->softDeletes();
             $table->timestamps();
         });
