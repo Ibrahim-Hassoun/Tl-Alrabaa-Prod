@@ -1,0 +1,8 @@
+/* components/Hero/Hero.css */
+.hero {
+  background-image: url("../../../assets/shisha-bg.webp");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top;
+  text-align: center;
+}
