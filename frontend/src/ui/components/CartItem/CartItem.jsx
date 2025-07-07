@@ -1,43 +1,25 @@
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { addToCart,decrementItemQuantity } from '../../../core/redux/CartSlice/CartSlice';
-import request from '../../../lib/remote/axios';
+import { useDispatch } from 'react-redux';
+import { addToCart, decrementItemQuantity } from '../../../core/redux/CartSlice/CartSlice';
 
-const CartItem = ({ id, name, image, price, quantity, collectionName }) => {
+const CartItem = ({ id, name, image, price, quantity }) => {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state) => state.auth.loggedIn);
-  const baseURL = import.meta.env.VITE_URL;
 
-  const handleAdd = async () => {
+  const handleAdd = () => {
     dispatch(addToCart({ productId: id, quantity: 1 }));
-
-    if (isLoggedIn) {
-      await request({
-        method: 'POST',
-        route: '/api/cart',
-        body: { product_id: id, quantity: 1 },
-      });
-    }
   };
 
-  const handleRemove = async () => {
+  const handleRemove = () => {
     dispatch(decrementItemQuantity(id));
-
-    if (isLoggedIn) {
-      await request({
-        method: 'POST',
-        route: '/api/cart/remove',
-        body: { product_id: id, quantity: 1 }, // adjust route/logic per backend
-      });
-    }
   };
 
   return (
     <div className="w-full h-20 flex border border-gray-200">
       <div className="title w-1/4 border-r border-gray-200 flex">
-        <div className="image-cotainer w-1/2 my-auto">
+        <div className="image-container w-1/2 my-auto">
           <img
-            src={`${baseURL}/images/${image}`}
+            src={image.slice('AWS_URL='.length)}
             alt="item"
             className="m-auto h-16"
           />
@@ -50,21 +32,23 @@ const CartItem = ({ id, name, image, price, quantity, collectionName }) => {
       </div>
 
       <div className="quantity w-1/4 border-r border-gray-200 flex">
-        <h1 className="m-auto flex justify-between items-start w-full">
+        <div className="m-auto flex justify-between items-center w-full px-4">
           <div
-            className="bg-primary h-5 w-5 text-tertiary rounded-full m-auto font-extrabold text-xs cursor-pointer"
+            className="bg-primary h-6 w-6 text-tertiary rounded-full font-extrabold text-xs flex items-center justify-center cursor-pointer"
             onClick={handleRemove}
           >
             -
           </div>
-          {quantity}
+
+          <span className="font-semibold text-secondary">{quantity}</span>
+
           <div
-            className="bg-primary h-5 w-5 text-tertiary rounded-full m-auto font-extrabold text-xs cursor-pointer"
+            className="bg-primary h-6 w-6 text-tertiary rounded-full font-extrabold text-xs flex items-center justify-center cursor-pointer"
             onClick={handleAdd}
           >
             +
           </div>
-        </h1>
+        </div>
       </div>
 
       <div className="total w-1/4 border-r border-gray-200 flex">
@@ -75,12 +59,12 @@ const CartItem = ({ id, name, image, price, quantity, collectionName }) => {
 };
 
 CartItem.propTypes = {
-  id: PropTypes.string.isRequired,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   name: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
   quantity: PropTypes.number.isRequired,
-  collectionName: PropTypes.string.isRequired,
+  collectionName: PropTypes.string,
 };
 
 export default CartItem;

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-const apiUrl = import.meta.env.VITE_URL ;
+const apiUrl = 'http://127.0.0.1:8000/api' ;
 
 const request = async ({ method, route, body, headers = {} }) => {
   try {

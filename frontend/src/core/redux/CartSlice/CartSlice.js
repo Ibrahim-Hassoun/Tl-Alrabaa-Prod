@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   items: [], // each item = { productId, quantity }
-  productCache: {}, // { [productId]: full product info }
+  products: [], // { [productId]: full product info }
   loadedFromDB: false,
 };
 
@@ -15,6 +15,7 @@ const cartSlice = createSlice({
       state.loadedFromDB = true;
     },
     addToCart: (state, action) => {
+      console.log('Adding to cart:', action.payload);
       const { productId, quantity } = action.payload;
       const existing = state.items.find((item) => item.productId === productId);
 
@@ -23,20 +24,21 @@ const cartSlice = createSlice({
       } else {
         state.items.push({ productId, quantity });
       }
+      
     },
     removeFromCart: (state, action) => {
       const productId = action.payload;
       state.items = state.items.filter((item) => item.productId !== productId);
-      delete state.productCache[productId];
+      delete state.products[productId];
     },
     clearCart: (state) => {
       state.items = [];
-      state.productCache = {};
+      state.products = {};
       state.loadedFromDB = false;
     },
     cacheProductDetails: (state, action) => {
       const product = action.payload;
-      state.productCache[product.id] = product;
+      state.products[product.id] = product;
     },
     decrementItemQuantity: (state, action) => {
       const productId = action.payload;
@@ -48,10 +50,17 @@ const cartSlice = createSlice({
         } else {
           // quantity is 1, remove the item completely
           state.items = state.items.filter(item => item.productId !== productId);
-          delete state.productCache[productId];
+          delete state.products[productId];
         }
       }
+    },
+    addProduct: (state, action) => {
+    const product = action.payload
+    const exists = state.products.find(p => p.id === product.id)
+    if (!exists) {
+      state.products.push(product)
     }
+}
 
   },
 });
@@ -62,7 +71,8 @@ export const {
   removeFromCart,
   clearCart,
   cacheProductDetails,
-  decrementItemQuantity
+  decrementItemQuantity,
+  addProduct 
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

@@ -3,12 +3,23 @@ import { motion } from 'framer-motion';
 import ProductCard from '../ProductCard/ProductCard';
 import axios from 'axios';
 import request from '../../../lib/remote/axios';
+import { addToCart,decrementItemQuantity } from '../../../core/redux/CartSlice/CartSlice';
+import { useDispatch } from 'react-redux';
 
 const ProductSection = ({ id, title, category, renderSidebar }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({});
+  // Redux dispatch for adding items to cart
+  const dispatch = useDispatch();
+  const handleAdd = (item) => {
+    dispatch(addToCart(item));
+  };
+  const handleRemove = (item) => {
+    dispatch(decrementItemQuantity(item));
+  };
+
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -82,6 +93,9 @@ const ProductSection = ({ id, title, category, renderSidebar }) => {
                   image={item.image}
                   price={item.discount_price || item.price}
                   originalPrice={item.discount_price ? item.price : null}
+                  onAdd={() => handleAdd({ productId: item.id, quantity: 1 })}
+                  onRemove={() => handleRemove(item.id)}
+
                   action="add"
                 />
               ))

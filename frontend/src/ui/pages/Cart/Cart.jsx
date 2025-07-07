@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { motion } from "framer-motion";
 import CartItem from "../../components/CartItem/CartItem";
 import { setCartItems } from "../../../core/redux/CartSlice/CartSlice";
+import request from "../../../lib/remote/axios";
+import { addProduct } from "../../../core/redux/CartSlice/CartSlice";
 
 
 const DELIVERY_FEE = 2000;
@@ -11,7 +13,33 @@ const TAX_RATE = 0.1;
 const Cart = () => {
   const dispatch = useDispatch();
   const { items } = useSelector((state) => state.cart);
-  const { products } = useSelector((state) => state.ui); // assumed central product list
+  const { products } = useSelector((state) => state.cart);
+
+
+  const cartItems = useSelector((state) => state.cart.items)
+  const cartProducts = useSelector((state) => state.cart.products)
+
+  useEffect(() => {
+    console.log("before missingIds")
+    const missingIds = cartItems
+      .map(item => item.productId)
+      .filter(id => !cartProducts.find(p => p.id === id))
+    console.log("missingIds", missingIds)
+    missingIds.forEach(async (id) => {
+      const res = await request({
+        method: "GET",
+        route: `/products/${id}`,
+      })
+
+      if (res.success && res.data) {
+        dispatch(addProduct(res.data))
+      } else {
+        console.error(`Failed to load product ${id}:`, res.message)
+      }
+    })
+  }, [cartItems, cartProducts, dispatch])
+
+  const getProduct = (productId) => cartProducts.find(p => p.id === productId)
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -20,7 +48,10 @@ const Cart = () => {
   const { subtotal, tax, delivery, total } = useMemo(() => {
     let subtotal = 0;
     items.forEach((cartItem) => {
-      const product = products.find((p) => p.id === cartItem.productId);
+      const product = products.find(p => p.id === cartItem.productId);
+;
+      console.log('cartItem', cartItem)
+      console.log('product', product)
       if (product) {
         subtotal += product.price * cartItem.quantity;
       }
@@ -93,8 +124,9 @@ const Cart = () => {
                 {items.map((cartItem, index) => {
                   const product = products.find(
                     (p) => p.id === cartItem.productId
+              
                   );
-                  if (!product) return null;
+                  if (!product) {console.log('returning null');return null};
 
                   return (
                     <motion.div

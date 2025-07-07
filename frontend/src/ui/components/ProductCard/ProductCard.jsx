@@ -1,7 +1,7 @@
-// components/ProductSection/ProductCard.jsx
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
+import { useSelector } from 'react-redux';
 
 const ProductCard = ({
   id,
@@ -11,17 +11,20 @@ const ProductCard = ({
   price,
   originalPrice,
   action,
-  cartCount = 0,
   onAdd,
   onRemove,
   onEdit,
   onDelete,
   collectionName,
 }) => {
-  useEffect(()=>{
-    console.log('image url is ',image.slice("AWS_URL=".length))
-  }
-)
+  const cartItems = useSelector((state) => state.cart.items);
+  const cartItem = cartItems.find((ci) => ci.productId === id);
+  const cartCount = cartItem ? cartItem.quantity : 0;
+
+  useEffect(() => {
+    console.log('image url is', image.slice('AWS_URL='.length));
+  }, [image]);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -31,7 +34,7 @@ const ProductCard = ({
     >
       <img
         className="w-full h-52 object-cover"
-        src={image.slice("AWS_URL=".length)}
+        src={image.slice('AWS_URL='.length)}
         alt={name}
         loading="lazy"
       />
@@ -72,7 +75,7 @@ const ProductCard = ({
         {action === 'add' && cartCount === 0 && (
           <button
             className="bg-secondary hover:opacity-90 active:opacity-80 text-white font-bold py-2 px-4 rounded"
-            onClick={onAdd}
+            onClick={() => onAdd()}
           >
             Add to Cart
           </button>
@@ -108,7 +111,6 @@ ProductCard.propTypes = {
   price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   originalPrice: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   action: PropTypes.oneOf(['add', 'edit', 'delete']).isRequired,
-  cartCount: PropTypes.number,
   onAdd: PropTypes.func,
   onRemove: PropTypes.func,
   onEdit: PropTypes.func,
