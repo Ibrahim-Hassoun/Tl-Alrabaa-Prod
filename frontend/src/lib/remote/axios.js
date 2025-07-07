@@ -6,7 +6,7 @@ const apiUrl = 'http://127.0.0.1:8000/api' ;
 const request = async ({ method, route, body, headers = {} }) => {
   try {
     
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("access_token");
 
     const defaultHeaders = {
       "Content-Type": "application/json",

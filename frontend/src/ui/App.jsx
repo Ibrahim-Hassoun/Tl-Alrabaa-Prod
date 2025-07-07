@@ -5,6 +5,7 @@ import { BrowserRouter, Routes ,Route} from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Cart from './pages/Cart/Cart';
 import Register from './pages/Register/Register';
+import Admin from './pages/Admin/Admin';
 function App() {
   
 
@@ -17,6 +18,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/admin" element={<Admin />} />
           
           
         </Routes>
