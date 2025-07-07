@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import ProductCard from '../ProductCard/ProductCard';
-import axios from 'axios';
 import request from '../../../lib/remote/axios';
+import { addToCart, decrementItemQuantity } from '../../../core/redux/CartSlice/CartSlice';
+import { useDispatch,useSelector } from 'react-redux';
 
 const ProductSection = ({ id, title, category, renderSidebar }) => {
   const [products, setProducts] = useState([]);
@@ -10,13 +11,48 @@ const ProductSection = ({ id, title, category, renderSidebar }) => {
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({});
 
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+
+const handleAdd = async (item) => {
+  dispatch(addToCart(item));
+  if (auth.loggedIn) {
+    const res = await request({
+      method: 'post',
+      route: '/cart/add',
+      body: {
+        product_id: item.productId,
+        quantity: item.quantity,
+      },
+    });
+
+    if (res.success) {
+      // Optional: dispatch to update Redux cart with new data
+      console.log('Item added to server cart');
+    } else {
+      console.error('Failed to add to server cart:', res.message);
+    }
+  } else {
+    dispatch(addToCart(item));
+  }
+};
+  const handleRemove = (item) => {
+    dispatch(decrementItemQuantity(item));
+  };
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const params = new URLSearchParams({ category, ...filters });
-        const res = await axios.get(`http://127.0.0.1:8000/api/products?category=${category}`);
-        setProducts(res.data.data.data);
+
+        const query = new URLSearchParams({ category, ...filters }).toString();
+        const res = await request({
+          method: 'get',
+          route: `/products?${query}`,
+        });
+
+        if (!res.success) throw new Error(res.message);
+        setProducts(res.data.data);
       } catch (err) {
         setError('Failed to load products.');
       } finally {
@@ -49,27 +85,15 @@ const ProductSection = ({ id, title, category, renderSidebar }) => {
 
           <div className="list m-auto w-full md:w-4/5 flex flex-wrap gap-2 justify-center">
             {loading ? (
-              <motion.p
-                className="text-primary text-3xl"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
+              <motion.p className="text-primary text-3xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                 Loading...
               </motion.p>
             ) : error ? (
-              <motion.p
-                className="text-red-500 text-3xl"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
+              <motion.p className="text-red-500 text-3xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                 {error}
               </motion.p>
             ) : products.length === 0 ? (
-              <motion.p
-                className="text-primary text-3xl"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
+              <motion.p className="text-primary text-3xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                 No items found
               </motion.p>
             ) : (
@@ -82,6 +106,8 @@ const ProductSection = ({ id, title, category, renderSidebar }) => {
                   image={item.image}
                   price={item.discount_price || item.price}
                   originalPrice={item.discount_price ? item.price : null}
+                  onAdd={() => handleAdd({ productId: item.id, quantity: 1 })}
+                  onRemove={() => handleRemove(item.id)}
                   action="add"
                 />
               ))

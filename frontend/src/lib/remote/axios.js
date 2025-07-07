@@ -6,10 +6,11 @@ const apiUrl = import.meta.env.VITE_URL ;
 const request = async ({ method, route, body, headers = {} }) => {
   try {
     
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("access_token");
 
     const defaultHeaders = {
       "Content-Type": "application/json",
+          "Accept": "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
 
       ...headers,

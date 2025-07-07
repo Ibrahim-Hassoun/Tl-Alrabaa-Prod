@@ -18,15 +18,7 @@ const Home = () => {
             <TobaccoFilters filters={filters} setFilters={setFilters} />
         )}
         />
-        <ShishaIntro/>
-        <ProductSection
-        id="shisha"
-        title="SHISHA"
-        category="shisha"
-        renderSidebar={({ filters, setFilters }) => (
-            <ShishaFilters filters={filters} setFilters={setFilters} />
-        )}
-        />
+        
         <Footer/>
     </>
   )

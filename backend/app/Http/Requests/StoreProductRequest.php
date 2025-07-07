@@ -21,7 +21,8 @@ class StoreProductRequest extends BaseFormRequest
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|string|max:2048',
+            'image' => 'required|image|max:2048',
+            'attributes' => 'nullable|json',
         ];
     }
 }

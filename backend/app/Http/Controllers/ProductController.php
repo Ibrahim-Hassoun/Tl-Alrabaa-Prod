@@ -22,21 +22,16 @@ class ProductController extends Controller
 
     // GET /api/products
     public function index(Request $request)
-    {
-        try {
-            $perPage = $request->query('per_page', 10);
+{
+    try {
+        $perPage = $request->query('per_page', 10);
+        $products = $this->productService->getPaginated($perPage, $request);
 
-            $filters = [
-                'category' => $request->query('category'),
-            ];
-
-            $products = $this->productService->getPaginated($perPage, $filters);
-
-            return $this->success($products);
-        } catch (\Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode() ?: 500);
-        }
+        return $this->success($products);
+    } catch (\Exception $e) {
+        return $this->error($e->getMessage(), 500);
     }
+}
 
 
     // GET /api/products/{id}
