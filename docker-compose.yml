@@ -7,10 +7,26 @@ services:
     container_name: tl-alrabaa-nginx
     ports:
       - "80:80"
+      - "443:443"
     volumes:
-      - ./nginx:/etc/nginx/conf.d
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/letsencrypt
+      - ./nginx/ssl-data:/var/www/certbot
     depends_on:
       - frontend
+
+  certbot:
+    image: certbot/certbot
+    container_name: tl-alrabaa-certbot
+    volumes:
+      - ./nginx/ssl:/etc/letsencrypt
+      - ./nginx/ssl-data:/var/www/certbot
+    entrypoint: "/bin/sh -c"
+    command: >
+      "certbot certonly --webroot --webroot-path=/var/www/certbot
+       --email ihassoun73@gmail.com
+       --agree-tos --no-eff-email
+       -d tl-alrabaa.com -d www.tl-alrabaa.com"
 
   frontend:
     build:
@@ -44,7 +60,6 @@ services:
       dockerfile: Dockerfile.laravel
     command: >
       bash -c "composer install && /wait-for-it.sh tl-alrabaa-database:3306 --timeout=300 && php artisan migrate --force && exec php artisan serve --host=0.0.0.0 --port=8000"
-      
 
   database:
     image: bitnami/mysql
