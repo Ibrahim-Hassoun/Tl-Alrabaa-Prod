@@ -1,12 +1,11 @@
-# Build stage
-FROM node:20-alpine AS builder
+# Step 1: Build the app
+FROM node:20 as builder
 WORKDIR /app
 COPY . .
-RUN npm install
-RUN npm run build
+RUN npm install && npm run build
 
-# Production stage
-FROM nginx:stable-alpine
+# Step 2: Serve it with nginx
+FROM nginx:alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
-EXPOSE 80
+EXPOSE 3000
 CMD ["nginx", "-g", "daemon off;"]
