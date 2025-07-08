@@ -44,6 +44,7 @@ services:
       dockerfile: Dockerfile.laravel
     command: >
       bash -c "composer install && /wait-for-it.sh tl-alrabaa-database:3306 --timeout=300 && php artisan migrate --force && exec php artisan serve --host=0.0.0.0 --port=8000"
+      
 
   database:
     image: bitnami/mysql
