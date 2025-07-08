@@ -14,6 +14,7 @@ services:
       - ./nginx/ssl-data:/var/www/certbot
     depends_on:
       - frontend
+      - laravel
 
   frontend:
     build:
@@ -22,6 +23,9 @@ services:
     container_name: tl-alrabaa-frontend
     expose:
       - "3000"
+    environment:
+      - NODE_ENV=production
+    command: npm run preview
     depends_on:
       - laravel
 
