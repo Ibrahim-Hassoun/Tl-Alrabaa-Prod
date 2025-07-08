@@ -69,14 +69,17 @@ const AddItemForm = () => {
     formData.append('category', category);
     formData.append('category_id', 1);
 
-   
+    for (let pair of formData.entries()) {
+  console.log(pair[0] + ':', pair[1]);
+}
+
     const res = await request({
       method: 'POST',
       route: `/products`,
       body: formData,
       headers: { 'Content-Type': 'multipart/form-data' },
     });
-    
+    console.log(res)
     setLoading(false);
     setMessage(res.message);
 
