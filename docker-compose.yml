@@ -21,7 +21,7 @@ services:
       dockerfile: Dockerfile
     container_name: tl-alrabaa-frontend
     expose:
-      - "3000"
+       - "3000:3000"
     depends_on:
       - laravel
 
