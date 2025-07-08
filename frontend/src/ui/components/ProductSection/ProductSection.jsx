@@ -76,14 +76,16 @@ const handleAdd = async (item) => {
         </motion.h1>
         <hr className="bg-secondary h-1 w-4/6 mt-3 mx-auto mb-4" />
 
-        <div className="main-table w-full flex flex-wrap">
+        <div className="main-table w-full flex flex-col md:flex-row gap-4">
           {renderSidebar && (
             <div className="w-full md:w-1/5 mb-5 md:mb-0">
               {renderSidebar({ filters, setFilters })}
             </div>
           )}
 
-          <div className="list m-auto w-full md:w-4/5 flex flex-wrap gap-2 justify-center">
+          <div className="list w-full md:w-4/5 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4">
+
+
             {loading ? (
               <motion.p className="text-primary text-3xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                 Loading...

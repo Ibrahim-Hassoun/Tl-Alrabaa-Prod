@@ -24,7 +24,7 @@ class ProductController extends Controller
     public function index(Request $request)
 {
     try {
-        $perPage = $request->query('per_page', 10);
+        $perPage = $request->query('per_page', 30);
         $products = $this->productService->getPaginated($perPage, $request);
 
         return $this->success($products);

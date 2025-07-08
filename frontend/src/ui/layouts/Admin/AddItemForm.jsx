@@ -131,11 +131,11 @@ const AddItemForm = () => {
             <option value="sour">Sour</option>
             <option value="sweet">Sweet</option>
           </select>
-          <select name="size" onChange={handleAttributeChange} required className="border border-primary rounded px-2 h-8">
-            <option hidden>Size</option>
-            <option value="small">Small</option>
-            <option value="medium">Medium</option>
-            <option value="large">Large</option>
+          <select name="weight" onChange={handleAttributeChange} required className="border border-primary rounded px-2 h-8">
+            <option hidden>Weight</option>
+            <option value="50g">50g</option>
+            <option value="250g">250g</option>
+            <option value="1000g">1000g</option>
           </select>
         </>
       )}

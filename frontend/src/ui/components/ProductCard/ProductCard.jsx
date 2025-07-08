@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
@@ -21,26 +21,40 @@ const ProductCard = ({
   const cartItem = cartItems.find((ci) => ci.productId === id);
   const cartCount = cartItem ? cartItem.quantity : 0;
 
-  
+  const [showFullDesc, setShowFullDesc] = useState(false);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="m-auto w-1/6 mt-3 min-w-52 rounded overflow-hidden shadow-lg bg-white p-2 text-center"
+      className="w-full mt-3 rounded overflow-hidden shadow-lg bg-white p-4 text-center flex flex-col h-full"
     >
       <img
-        className="w-full h-52 object-cover"
+        className="w-full h-64 object-cover"
         src={image.slice('AWS_URL='.length)}
         alt={name}
         loading="lazy"
       />
-      <div className="px-6 py-4">
+
+      <div className="px-4 py-2">
         <div className="font-bold text-xl h-12 mb-2">{name}</div>
-        <p className="text-gray-700 h-20 text-base">{description}</p>
+
+        <p className={`text-gray-700 text-base ${showFullDesc ? '' : 'line-clamp-3'}`}>
+          {description}
+        </p>
+
+        {description.length > 100 && (
+          <button
+            onClick={() => setShowFullDesc((prev) => !prev)}
+            className="text-primary font-semibold mt-1 underline"
+          >
+            {showFullDesc ? 'Show Less' : 'Show More'}
+          </button>
+        )}
+
         {price && (
-          <div className="mt-2 text-lg text-green-600 font-semibold">
+          <div className="mt-3 text-lg text-green-600 font-semibold">
             {price} IQD
             {originalPrice && (
               <span className="text-sm text-red-500 line-through ml-2">
@@ -51,7 +65,7 @@ const ProductCard = ({
         )}
       </div>
 
-      <div className="m-auto pb-2">
+      <div className="mt-auto pt-4">
         {action === 'delete' && (
           <button
             className="bg-red-700 hover:opacity-90 active:opacity-80 text-white font-bold py-2 px-4 rounded"
@@ -80,7 +94,7 @@ const ProductCard = ({
         )}
 
         {action === 'add' && cartCount > 0 && (
-          <div className="controls flex justify-around items-center">
+          <div className="controls flex justify-center items-center gap-4 mt-2">
             <span
               onClick={onRemove}
               className="bg-primary rounded-full text-tertiary w-9 h-9 flex items-center justify-center cursor-pointer font-bold text-xl"
