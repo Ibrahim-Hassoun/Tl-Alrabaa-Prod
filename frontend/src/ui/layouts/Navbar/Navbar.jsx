@@ -38,7 +38,7 @@ const Navbar = () => {
     <div className="bg-primary Navbar fixed top-0 w-full z-10 h-20 font-primary font-medium text-2xl flex">
       <div className="m-auto flex containers justify-between w-full h-16 text-tertiary">
         <Link to="/" className="left-nav mr-auto sm:mr-0" onClick={() => handleNavClick("home")}>
-          <img src='https://tl-alrabaa-assets.s3.eu-north-1.amazonaws.com/products/black-bg-logo.jpg' alt="logo" className="w-full h-full object-contain cursor-pointer" />
+          <img src='/black-bg-logo.jpg' alt="logo" className="w-full h-full object-contain cursor-pointer" />
         </Link>
 
         <div className="center-nav hidden sm:flex items-center pl-24">
