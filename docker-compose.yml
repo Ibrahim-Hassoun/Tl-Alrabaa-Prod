@@ -1,12 +1,24 @@
+version: '3.9'
+
 services:
+
+  nginx:
+    image: nginx:latest
+    container_name: tl-alrabaa-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - frontend
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: tl-alrabaa-frontend
-    ports:
-      - 3000:80
+    expose:
+      - "3000"
     depends_on:
       - laravel
 
@@ -31,9 +43,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile.laravel
     command: >
-      bash -c "composer install && php artisan migrate && exec php artisan serve --host=0.0.0.0 --port=8000"
-
-
+      bash -c "composer install && /wait-for-it.sh tl-alrabaa-database:3306 --timeout=300 && php artisan migrate --force && exec php artisan serve --host=0.0.0.0 --port=8000"
 
   database:
     image: bitnami/mysql
